@@ -53,7 +53,7 @@ Antes de abrir a janela, explique-me em poucas linhas:
 Depois execute, em primeiro plano e com tempo limite de 10 minutos:
     & "<caminho completo do uv.exe>" run --directory "<pasta_do_servidor>" python cofre.py
 Se passar do tempo limite, a janela continua aberta: não abra outra e não siga adiante; espere eu dizer que fechei e só então leia a saída.
-Da saída, diga-me apenas o que ficou gravado, o que falta e as datas. Não cole o JSON. Se faltar algo que eu queira preencher agora, abra a janela outra vez.
+Da saída, diga-me apenas o que ficou gravado, o que falta e as datas. Não cole o JSON. Se a saída vier vazia (janela encerrada sem o botão "Fechar"), não abra outra: siga para o passo 4 e responda pelo que ele mostrar. Se faltar algo que eu queira preencher agora, abra a janela outra vez.
 
 Passo 4 — conferência (sem login)
 Execute:
