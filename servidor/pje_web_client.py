@@ -1223,6 +1223,10 @@ class PJeWebClient:
             Lista de {idProcesso, idTaskInstance, numero, url} (numero pode
             vir vazio; é resolvido via resumo_processo quando preciso).
         """
+        # No modo só cofre o servidor não toca no navegador: no macOS, consultar
+        # o Chrome abriria um pedido de permissão do sistema que ninguém espera.
+        if os.getenv("PJE_SEM_COOKIES"):
+            return []
         import subprocess
         script = (
             'tell application "Google Chrome"\n'

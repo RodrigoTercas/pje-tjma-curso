@@ -31,12 +31,12 @@ import time
 import urllib.request
 import zipfile
 
-VERSAO = "v1"
+VERSAO = "v2"
 ORIGEM_PADRAO = f"https://github.com/RodrigoTercas/pje-tjma-curso/archive/refs/tags/{VERSAO}.zip"
 # >>> integridade: SHA-256 de cada arquivo instalado; gerado por selar.py, não edite à mão.
 INTEGRIDADE = {
-    "servidor/server.py": "c50c051b50383abf70ac7fd0d4a2dc5ec9610e38db72514fe6356e29c658a36f",
-    "servidor/pje_web_client.py": "1173a1ef82b37abeb9dbf10fe56de2015082fe62ed18faa89f1ebaa5da98134c",
+    "servidor/server.py": "d496115611447bbd5294e5b67757b769844bee3efa96d054b3b159c5f1d70fd9",
+    "servidor/pje_web_client.py": "cbe200964d656ccd725bd9d1c3009c8e8ea02475171783e03f0b183a2671fbbb",
     "servidor/config.py": "8148c836900c92362eda7e5c2af1dc47b3355fa3fd5efa65fc3e41d22000dc46",
     "servidor/models.py": "56aadc2f6ab0d05c66b856dc6d74a2e577324b0b855b6a7bff1be249a6df114b",
     "servidor/cofre.py": "9450b3504013740b4af1d355d9d4b4e582cba0784999109890e92cd0c92dff84",
@@ -216,11 +216,14 @@ def pastas_do_claude_desktop():
 
 def entrada_do_servidor(uv: str, orgao, anterior) -> dict:
     amb = dict((anterior or {}).get("env") or {})
-    amb.update({"PYTHONUTF8": "1", "UV_PYTHON_PREFERENCE": "only-managed"})
+    # PJE_SEM_COOKIES: o servidor entra so pelo cofre e nao toca no navegador.
+    # No Windows nao ha alternativa; no macOS, ler o Chrome faria o sistema
+    # pedir a senha do computador e permissao para controlar o navegador.
+    amb.update({"PYTHONUTF8": "1", "UV_PYTHON_PREFERENCE": "only-managed",
+                "PJE_SEM_COOKIES": "1"})
     if orgao is not None or "PJE_ORGAO_ALVO" not in amb:
         amb["PJE_ORGAO_ALVO"] = orgao or ""
     if WINDOWS:
-        amb["PJE_SEM_COOKIES"] = "1"
         amb["USERPROFILE"] = HOME
     return {"command": uv, "args": ["--directory", DESTINO, "run", "python", "server.py"], "env": amb}
 

@@ -266,10 +266,11 @@ def processos_abertos() -> str:
     web.login()
     abertos = web.processos_abertos()
     if not abertos:
-        if sys.platform != "darwin":
+        import os
+        if sys.platform != "darwin" or os.getenv("PJE_SEM_COOKIES"):
             return (
-                "A leitura das abas do Chrome só existe no macOS. Neste sistema, "
-                "informe o CNJ de um processo que esteja na fila ou o idProcesso."
+                "Neste computador o servidor não lê as abas do navegador. Informe o "
+                "CNJ de um processo que esteja na fila ou o idProcesso."
             )
         return (
             "Nenhuma aba de autos digitais aberta no Chrome.\n"
@@ -678,15 +679,17 @@ def status_conexao() -> str:
     if not st["orgao_ok"]:
         oj += f"  ⚠️ diferente do órgão-alvo ({st['orgao_alvo']})"
 
-    abertos = web.processos_abertos()
-    return "\n".join([
+    import os
+    linhas = [
         "✅ Conexão com o PJe-TJMA ativa (verificada contra a API, não só cookies).",
         f"   Verificação: {st['diagnostico']}",
         f"   Origem da sessão: {st['perfil_chrome']}",
         f"   Cookies na sessão: {st['cookies_session']}",
         f"   Órgão julgador da sessão: {oj}",
-        f"   Autos abertos no Chrome: {len(abertos)}",
-    ])
+    ]
+    if not os.getenv("PJE_SEM_COOKIES"):
+        linhas.append(f"   Autos abertos no Chrome: {len(web.processos_abertos())}")
+    return "\n".join(linhas)
 
 
 _janela_cofre = None

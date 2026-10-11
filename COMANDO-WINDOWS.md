@@ -35,10 +35,10 @@ Daqui em diante chame o uv sempre por esse caminho completo.
 Passo 2 — instalador
 Baixe o instalador e mostre a impressão digital (SHA-256) do arquivo:
     $f = Join-Path $env:TEMP "instalar_pje.py"
-    Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/RodrigoTercas/pje-tjma-curso/v1/instalar.py" -OutFile $f
+    Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/RodrigoTercas/pje-tjma-curso/v2/instalar.py" -OutFile $f
     (Get-FileHash $f -Algorithm SHA256).Hash
 O valor tem de ser este, sem diferença de maiúsculas ou minúsculas:
-    2ca246de4a9634c695abca7aca06b56c526bc3e3648c3e2ddf60734b1b757ca1
+    635a60430ebec6721f2a6347344e32d12cb86b070c986a3a369e24eb232469b4
 Se for diferente, PARE: não execute o arquivo e me avise. Se for igual, execute-o com tempo limite de 10 minutos (na primeira vez ele baixa o Python e as bibliotecas):
     $env:UV_NATIVE_TLS = "1"; $env:UV_SYSTEM_CERTS = "1"; $env:UV_PYTHON_PREFERENCE = "only-managed"
     & "<caminho completo do uv.exe>" run (Join-Path $env:TEMP "instalar_pje.py")

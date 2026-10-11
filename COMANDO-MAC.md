@@ -27,16 +27,16 @@ Mostre a versão com o caminho completo (por exemplo, ~/.local/bin/uv --version)
 
 Passo 2 — instalador
 Baixe o instalador para uma pasta temporária só sua e mostre a impressão digital (SHA-256) do arquivo:
-    d=$(mktemp -d) && curl -fsSL https://raw.githubusercontent.com/RodrigoTercas/pje-tjma-curso/v1/instalar.py -o "$d/instalar_pje.py" && shasum -a 256 "$d/instalar_pje.py"
+    d=$(mktemp -d) && curl -fsSL https://raw.githubusercontent.com/RodrigoTercas/pje-tjma-curso/v2/instalar.py -o "$d/instalar_pje.py" && shasum -a 256 "$d/instalar_pje.py"
 O valor tem de ser este:
-    2ca246de4a9634c695abca7aca06b56c526bc3e3648c3e2ddf60734b1b757ca1
+    635a60430ebec6721f2a6347344e32d12cb86b070c986a3a369e24eb232469b4
 Se for diferente, PARE: não execute o arquivo e me avise. Se for igual, execute-o com tempo limite de 10 minutos (na primeira vez ele baixa o Python e as bibliotecas), usando o caminho que o comando anterior mostrou:
     UV_NATIVE_TLS=1 UV_SYSTEM_CERTS=1 UV_PYTHON_PREFERENCE=only-managed "<caminho completo do uv>" run "<caminho do instalar_pje.py>"
 Ele confere a integridade do pacote, copia o servidor para ~/mcp-pje-tjma, roda um autoteste que não faz login, registra o servidor "pje-tjma" na configuração do Claude Desktop (guardando cópia de segurança) e instala a skill pje-login. Mostre-me as linhas OK, AVISO e ERRO. Se houver ERRO, pare aqui. Guarde o valor de "pasta_do_servidor" que aparece no final.
 
 Passo 3 — cofre (sou eu quem digita)
 Antes de abrir a janela, explique-me em poucas linhas:
-- vai abrir uma janela chamada "Cofre do PJe"; ela pode surgir atrás desta, e eu preciso clicar dentro dela antes de digitar;
+- vai abrir uma janela chamada "Cofre do PJe" (no Dock ela aparece como um ícone chamado "Python"); ela pode surgir atrás desta, e eu preciso clicar dentro dela antes de digitar;
 - nela eu digito o usuário e a senha com que entro no PJe e a chave do autenticador, clico em "Salvar no cofre" e depois em "Fechar"; os três campos ficam velados;
 - a chave do autenticador é o texto que o PJe mostra junto do QR code ao configurar um novo dispositivo (ou o endereço otpauth:// lido do QR), e não o código de 6 dígitos. Se eu não a tiver agora, posso salvar só usuário e senha e cadastrar a chave depois;
 - eu não devo colar nenhuma dessas informações aqui no chat.

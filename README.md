@@ -50,23 +50,28 @@ Para trocar a senha ou cadastrar a chave mais tarde, peça "abra o cofre do PJe"
 
 ## O que foi e o que não foi testado
 
-- macOS: instalação do zero em pasta de usuário vazia, conversa MCP com o
-  servidor instalado, janela do cofre e login real.
-- Windows: **ainda não testado em máquina real**. O código segue a
-  documentação da Microsoft, do uv e do Claude Desktop, mas precisa de um
-  ensaio completo antes de qualquer gravação.
+- Windows: instalação e conexão testadas pelo professor em máquina real, com
+  a versão v1.
+- macOS: instalação do zero em pasta de usuário vazia a partir dos endereços
+  publicados, conversa MCP com o servidor instalado, janela do cofre e login
+  real. Falta o ensaio no Mac de um aluno, com o Claude Desktop recém-instalado.
 - Chat e aba Code (sessão Local): é o que a documentação do Claude garante
   para servidores do `claude_desktop_config.json`. Para o **Cowork** não há
   garantia; verifique no seu aplicativo.
 - Só o PJe do TJMA. Outros tribunais exigem trocar o endereço no código e
   não foram testados.
 
-## Limitações no Windows
+## Limitações
 
-- O servidor não aproveita a sessão do Chrome (o Chrome para Windows cifra os
-  cookies de um modo que não se lê de fora). O login é sempre pelo cofre.
-- `processos_abertos` e o modo "processo aberto no Chrome" só existem no
-  macOS. Informe o CNJ de um processo da fila ou o idProcesso.
+Valem no Windows e no Mac: o servidor instalado por este pacote entra só pelo
+cofre e não toca no navegador.
+
+- Ele não aproveita a sessão aberta no Chrome. No Windows não há como (o
+  Chrome cifra os cookies de um modo que não se lê de fora); no Mac seria
+  possível, mas faria o sistema pedir a senha do computador e permissão para
+  controlar o navegador.
+- `processos_abertos` e o modo "processo aberto no Chrome" ficam desligados.
+  Informe o CNJ de um processo da fila ou o idProcesso.
 - `preparar_minuta_no_pje` copia o texto e devolve o endereço do editor, mas
   não abre o navegador: entrar no PJe por ele derrubaria a sessão do servidor.
 
