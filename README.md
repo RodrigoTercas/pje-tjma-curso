@@ -112,6 +112,8 @@ versões novas ganham um comando novo neste README.
 
 ## Desinstalar
 
-Apagar a entrada `pje-tjma` do `claude_desktop_config.json` (há cópia
-`.antes-do-pje-<data>` ao lado), a pasta `~/mcp-pje-tjma`, a pasta
-`~/.claude/skills/pje-login` e os arquivos `~/.pje_*`.
+Cole no chat da aba Code o texto de
+[COMANDO-DESINSTALAR.md](COMANDO-DESINSTALAR.md). Ele tira o servidor da
+configuração do Claude Desktop (com cópia de segurança), remove a skill e a
+pasta do servidor, e só apaga o cofre se você pedir. No Windows são duas
+passadas, com o Claude Desktop reiniciado entre elas.
