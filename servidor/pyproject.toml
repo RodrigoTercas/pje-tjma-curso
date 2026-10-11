@@ -1,0 +1,15 @@
+[project]
+name = "mcp-pje-tjma"
+version = "0.2.0"
+description = "Servidor MCP do PJe (TJMA, 1º grau) com login por cofre local"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+    "beautifulsoup4>=4.14.3",
+    "browser-cookie3>=0.20.1",
+    "fastmcp>=3.2.4",
+    "pyotp>=2.10.0",
+    "pypdf>=6.13.2",
+    "python-dotenv>=1.2.2",
+    "requests>=2.33.1",
+    "truststore>=0.10",
+]

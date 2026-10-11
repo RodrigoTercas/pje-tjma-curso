@@ -1,0 +1,78 @@
+# Comando para colar no chat do Claude Code — Windows
+
+## Antes de colar
+
+- Você precisa de um plano do Claude que tenha a aba **Code** e de uma sessão **Local** (o ambiente aparece ao lado do campo de mensagem).
+- No seletor de modo, ao lado do botão de enviar, escolha o modo que **pede permissão a cada comando** e aprove um por um.
+- Tenha em mãos o usuário e a senha com que você entra no PJe. Quem só entra por certificado ou token não consegue usar este login.
+- Se for gravar a tela, preencha o cofre antes, fora da gravação (veja o README).
+
+## O comando
+
+Copie tudo o que está dentro do bloco abaixo e cole no chat da aba Code.
+
+```text
+Instale e configure o acesso ao PJe (TJMA, 1º grau) neste computador com Windows, para uso no Claude Desktop. Trabalhe um passo de cada vez, mostre o resultado real de cada comando e pare no primeiro erro, explicando o que aconteceu. Não use privilégio de administrador e não altere políticas do Windows.
+
+Regras que valem para a tarefa inteira:
+- Nunca peça, leia, exiba nem grave minha senha, meu usuário ou a chave do meu autenticador. Sou eu quem digita esses dados, numa janela com campos velados que você vai abrir no passo 3. Se eu colar alguma credencial aqui no chat, não a use e me avise.
+- Não abra nem leia os arquivos .pje_usuario, .pje_senha e .pje_totp.secret da minha pasta de usuário, por nenhum meio.
+- Nesta tarefa não faça login no PJe, não abra o PJe em navegador e não chame ferramentas do PJe.
+- Os comandos abaixo estão em PowerShell. Se a sua ferramenta de terminal for o PowerShell, execute cada bloco como está, numa única chamada (variáveis não passam de uma chamada para outra). Se for o Bash, execute cada bloco assim: powershell -NoProfile -ExecutionPolicy Bypass -Command '<bloco>' — com aspas SIMPLES por fora, para o Bash não mexer nos cifrões. Não use %NOME%, "~" nem "$HOME".
+- Se um comando falhar só por causa de aspas ou da sintaxe do seu terminal, corrija a forma e repita uma vez, avisando. Em qualquer outro erro, pare.
+- Se um comando passar do tempo limite, ele continua em segundo plano: não o execute de novo; espere terminar e leia a saída inteira.
+
+Passo 1 — uv (programa que baixa o Python sozinho)
+Verifique se ele já existe:
+    Test-Path "$env:USERPROFILE\.local\bin\uv.exe"
+Se não existir, instale com o instalador oficial (esta linha vale igual nos dois terminais, sem embrulhar) e veja na saída em que pasta ele foi gravado:
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "irm https://astral.sh/uv/install.ps1 | iex"
+Se o instalador reclamar de "execution policy", este computador é gerenciado: não altere a política nem use Set-ExecutionPolicy. Tente "winget install --id=astral-sh.uv -e --accept-source-agreements --accept-package-agreements" e procure o uv.exe em "$env:LOCALAPPDATA\Microsoft\WinGet\Links". Se pedir senha de administrador, pare e me avise.
+Mostre a versão com o caminho completo, por exemplo:
+    & "$env:USERPROFILE\.local\bin\uv.exe" --version
+Daqui em diante chame o uv sempre por esse caminho completo.
+
+Passo 2 — instalador
+Baixe o instalador e mostre a impressão digital (SHA-256) do arquivo:
+    $f = Join-Path $env:TEMP "instalar_pje.py"
+    Invoke-WebRequest -UseBasicParsing "https://raw.githubusercontent.com/RodrigoTercas/pje-tjma-curso/v1/instalar.py" -OutFile $f
+    (Get-FileHash $f -Algorithm SHA256).Hash
+O valor tem de ser este, sem diferença de maiúsculas ou minúsculas:
+    2ca246de4a9634c695abca7aca06b56c526bc3e3648c3e2ddf60734b1b757ca1
+Se for diferente, PARE: não execute o arquivo e me avise. Se for igual, execute-o com tempo limite de 10 minutos (na primeira vez ele baixa o Python e as bibliotecas):
+    $env:UV_NATIVE_TLS = "1"; $env:UV_SYSTEM_CERTS = "1"; $env:UV_PYTHON_PREFERENCE = "only-managed"
+    & "<caminho completo do uv.exe>" run (Join-Path $env:TEMP "instalar_pje.py")
+Ele confere a integridade do pacote, copia o servidor para a pasta mcp-pje-tjma dentro da minha pasta de usuário, roda um autoteste que não faz login, registra o servidor "pje-tjma" na configuração do Claude Desktop (guardando cópia de segurança) e instala a skill pje-login. Mostre-me as linhas OK, AVISO e ERRO. Se houver ERRO, pare aqui. Guarde o valor de "pasta_do_servidor" que aparece no final.
+
+Passo 3 — cofre (sou eu quem digita)
+Antes de abrir a janela, explique-me em poucas linhas:
+- vai abrir uma janela chamada "Cofre do PJe"; ela pode surgir atrás desta ou só piscar na barra de tarefas, e eu preciso clicar dentro dela antes de digitar;
+- nela eu digito o usuário e a senha com que entro no PJe e a chave do autenticador, clico em "Salvar no cofre" e depois em "Fechar"; os três campos ficam velados;
+- a chave do autenticador é o texto que o PJe mostra junto do QR code ao configurar um novo dispositivo (ou o endereço otpauth:// lido do QR), e não o código de 6 dígitos. Se eu não a tiver agora, posso salvar só usuário e senha e cadastrar a chave depois;
+- eu não devo colar nenhuma dessas informações aqui no chat.
+Depois execute, em primeiro plano e com tempo limite de 10 minutos:
+    & "<caminho completo do uv.exe>" run --directory "<pasta_do_servidor>" python cofre.py
+Se passar do tempo limite, a janela continua aberta: não abra outra e não siga adiante; espere eu dizer que fechei e só então leia a saída.
+Da saída, diga-me apenas o que ficou gravado, o que falta e as datas. Não cole o JSON. Se faltar algo que eu queira preencher agora, abra a janela outra vez.
+
+Passo 4 — conferência (sem login)
+Execute:
+    & "<caminho completo do uv.exe>" run --directory "<pasta_do_servidor>" python cofre.py --estado
+e diga só se o cofre está completo e se o login automático está ligado.
+
+Passo 5 — o que eu faço em seguida
+Explique-me, em lista curta:
+1. Agora, sem mexer em mais nada: sair do Claude Desktop por completo (ícone do Claude na bandeja, perto do relógio, opção de sair; se sobrar processo, encerrar pelo Gerenciador de Tarefas) e abrir de novo. Só fechar a janela não basta.
+2. Depois de reabrir, no Chat ou numa sessão Local da aba Code, pedir: "teste a conexão com o PJe".
+3. Se o servidor não aparecer: em Configurações > Desenvolvedor deve constar "pje-tjma"; o motivo de uma falha fica no arquivo mcp-server-pje-tjma.log, na pasta de logs do Claude ("$env:APPDATA\Claude\logs"). Se a entrada tiver sumido da configuração, rodar de novo o passo 2 e sair do aplicativo em seguida.
+4. Para trocar a senha ou cadastrar a chave depois, pedir: "abra o cofre do PJe". Essa janela não tem limite de tempo. Se eu estiver cadastrando o autenticador, só peço o teste de conexão depois de confirmar o código no PJe.
+5. A skill pje-login já vale na aba Code. Para o Chat e o Cowork, enviar o arquivo pje-login.zip, que está na pasta do servidor, em Personalizar > Skills.
+6. No Cowork o servidor pode não aparecer: a documentação só garante o Chat e as sessões locais da aba Code. Testar lá antes de contar com isso.
+7. Cuidados: o cofre guarda as credenciais em arquivos de texto na minha pasta de usuário, e a pasta do servidor guarda a sessão aberta; tudo protegido só pela minha conta do Windows. Usar apenas em computador pessoal, com senha de acesso e disco criptografado; nunca copiar, sincronizar em nuvem nem enviar esses arquivos. O login do servidor derruba a sessão do navegador, e vice-versa: não usar o PJe no navegador ao mesmo tempo.
+
+Termine com um resumo do que foi instalado, onde ficou e o que ainda depende de mim.
+```
+
+## Se a rede bloquear o download
+
+Baixe o zip da versão em outro lugar, copie para o computador, extraia e peça ao Claude Code para executar o `instalar.py` que está dentro da pasta extraída, com o uv, do mesmo modo do passo 2.
